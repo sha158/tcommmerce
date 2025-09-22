@@ -1,0 +1,38 @@
+ npm run dev
+
+> tcommerce-backend@1.0.0 dev
+> nodemon server.js
+
+[nodemon] 3.1.10
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node server.js`
+✅ Environment configuration validated
+❌ Database connection failed: Tenant or user not found
+⚠️  Server will start but database operations will fail
+🔧 Please check your DATABASE_URL in .env file
+⚠️  Starting server without database connection
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at Function.listen (C:\Users\User\Desktop\tcommerce-BE\node_modules\express\lib\application.js:635:24)
+    at startServer (C:\Users\User\Desktop\tcommerce-BE\server.js:52:24)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1976:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 3000
+}
+
+Node.js v22.17.0
+[nodemon] app crashed - waiting for file changes before starting...
