@@ -1,38 +1,196 @@
- npm run dev
+TCommerce API Documentation
 
-> tcommerce-backend@1.0.0 dev
-> nodemon server.js
+  Base URL
 
-[nodemon] 3.1.10
-[nodemon] to restart at any time, enter `rs`
-[nodemon] watching path(s): *.*
-[nodemon] watching extensions: js,mjs,cjs,json
-[nodemon] starting `node server.js`
-✅ Environment configuration validated
-❌ Database connection failed: Tenant or user not found
-⚠️  Server will start but database operations will fail
-🔧 Please check your DATABASE_URL in .env file
-⚠️  Starting server without database connection
-node:events:496
-      throw er; // Unhandled 'error' event
-      ^
+  https://tcommmerce.vercel.app
 
-Error: listen EADDRINUSE: address already in use :::3000
-    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
-    at listenInCluster (node:net:1997:12)
-    at Server.listen (node:net:2102:7)
-    at Function.listen (C:\Users\User\Desktop\tcommerce-BE\node_modules\express\lib\application.js:635:24)
-    at startServer (C:\Users\User\Desktop\tcommerce-BE\server.js:52:24)
-    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
-Emitted 'error' event on Server instance at:
-    at emitErrorNT (node:net:1976:8)
-    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
-  code: 'EADDRINUSE',
-  errno: -4091,
-  syscall: 'listen',
-  address: '::',
-  port: 3000
-}
+  ---
+  1. User Registration
 
-Node.js v22.17.0
-[nodemon] app crashed - waiting for file changes before starting...
+  Endpoint: POST /api/v1/auth/register
+
+  Description: Register a new user account
+
+  Rate Limit: 5 requests per 15 minutes
+
+  Request Body
+
+  {
+    "firstName": "string",
+    "lastName": "string",
+    "email": "string",
+    "password": "string",
+    "phone": "string" // optional
+  }
+
+  Validation Rules
+
+  - firstName: 2-50 characters, required
+  - lastName: 2-50 characters, required
+  - email: Valid email format, required
+  - password: 8-128 characters, must contain
+  uppercase, lowercase, number, and special character,    
+   required
+  - phone: Valid international phone number format,       
+  optional
+
+  Response
+
+  Success (201):
+  {
+    "success": true,
+    "message": "User registered successfully",
+    "data": {
+      "user": {
+        "id": "uuid",
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john@example.com",
+        "phone": "+1234567890",
+        "createdAt": "2024-01-15T10:30:00.000Z"
+      },
+      "token": "jwt_token_here"
+    }
+  }
+
+  Error (400 - Validation):
+  {
+    "success": false,
+    "message": "Validation failed",
+    "errors": [
+      "Password must contain at least one uppercase       
+  letter, one lowercase letter, one number, and one       
+  special character"
+    ]
+  }
+
+  Error (409 - Conflict):
+  {
+    "success": false,
+    "message": "User with this email already exists"      
+  }
+
+  ---
+  2. User Login
+
+  Endpoint: POST /api/v1/auth/login
+
+  Description: Authenticate user and get access token     
+
+  Rate Limit: 10 requests per 15 minutes
+
+  Request Body
+
+  {
+    "email": "string",
+    "password": "string"
+  }
+
+  Validation Rules
+
+  - email: Valid email format, required
+  - password: Required
+
+  Response
+
+  Success (200):
+  {
+    "success": true,
+    "message": "Login successful",
+    "data": {
+      "user": {
+        "id": "uuid",
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john@example.com",
+        "phone": "+1234567890",
+        "lastLogin": "2024-01-15T10:30:00.000Z"
+      },
+      "token": "jwt_token_here"
+    }
+  }
+
+  Error (401 - Invalid Credentials):
+  {
+    "success": false,
+    "message": "Invalid email or password"
+  }
+
+  Error (401 - Account Deactivated):
+  {
+    "success": false,
+    "message": "Account has been deactivated"
+  }
+
+  ---
+  3. Get User Profile
+
+  Endpoint: GET /api/v1/auth/profile
+
+  Description: Get authenticated user's profile
+  information
+
+  Authentication: Required (Bearer Token)
+
+  Headers
+
+  Authorization: Bearer <jwt_token>
+
+  Response
+
+  Success (200):
+  {
+    "success": true,
+    "data": {
+      "user": {
+        "id": "uuid",
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john@example.com",
+        "phone": "+1234567890",
+        "isActive": true,
+        "createdAt": "2024-01-15T10:30:00.000Z",
+        "updatedAt": "2024-01-15T10:30:00.000Z"
+      }
+    }
+  }
+
+  Error (401 - Unauthorized):
+  {
+    "success": false,
+    "message": "Access denied. No token provided"
+  }
+
+  Error (404 - User Not Found):
+  {
+    "success": false,
+    "message": "User not found"
+  }
+
+  ---
+  Authentication
+
+  The API uses JWT (JSON Web Tokens) for
+  authentication. After successful login or
+  registration, include the token in the Authorization    
+   header:
+
+  Authorization: Bearer <your_jwt_token>
+
+  Error Handling
+
+  All API responses follow a consistent format:
+
+  Success Response:
+  {
+    "success": true,
+    "message": "Operation successful",
+    "data": { /* response data */ }
+  }
+
+  Error Response:
+  {
+    "success": false,
+    "message": "Error description",
+    "errors": ["Additional error details"] // optional    
+  }
