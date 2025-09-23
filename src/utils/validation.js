@@ -16,11 +16,10 @@ const userRegistrationSchema = Joi.object({
     .trim()
     .min(2)
     .max(50)
-    .required()
+    .optional()
     .messages({
       'string.min': 'Last name must be at least 2 characters long',
-      'string.max': 'Last name cannot exceed 50 characters',
-      'any.required': 'Last name is required'
+      'string.max': 'Last name cannot exceed 50 characters'
     }),
 
   email: Joi.string()
