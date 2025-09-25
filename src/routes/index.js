@@ -2,6 +2,7 @@ const express = require('express');
 const authRoutes = require('./authRoutes');
 const categoryRoutes = require('./categoryRoutes');
 const productRoutes = require('./productRoutes');
+const cartRoutes = require('./cartRoutes');
 
 const router = express.Router();
 
@@ -34,6 +35,14 @@ router.get('/health', (req, res) => {
         create: 'POST /api/v1/products',
         update: 'PUT /api/v1/products/:id',
         delete: 'DELETE /api/v1/products/:id'
+      },
+      cart: {
+        get: 'GET /api/v1/cart',
+        count: 'GET /api/v1/cart/count',
+        add: 'POST /api/v1/cart/add',
+        update: 'PUT /api/v1/cart/:itemId',
+        remove: 'DELETE /api/v1/cart/:itemId',
+        clear: 'DELETE /api/v1/cart'
       }
     }
   });
@@ -42,5 +51,6 @@ router.get('/health', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/products', productRoutes);
+router.use('/cart', cartRoutes);
 
 module.exports = router;

@@ -1,8 +1,8 @@
 const Cart = require('../models/Cart');
-const { handleAsync } = require('../utils/errorHandler');
+const { asyncHandler } = require('../utils/errorHandler');
 
 const cartController = {
-  addToCart: handleAsync(async (req, res) => {
+  addToCart: asyncHandler(async (req, res) => {
     const { product_id, quantity = 1 } = req.body;
     const userId = req.user.id;
 
@@ -36,7 +36,7 @@ const cartController = {
     }
   }),
 
-  getCart: handleAsync(async (req, res) => {
+  getCart: asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const cart = await Cart.getCartItems(userId);
 
@@ -47,7 +47,7 @@ const cartController = {
     });
   }),
 
-  updateCartItem: handleAsync(async (req, res) => {
+  updateCartItem: asyncHandler(async (req, res) => {
     const { itemId } = req.params;
     const { quantity } = req.body;
     const userId = req.user.id;
@@ -75,7 +75,7 @@ const cartController = {
     }
   }),
 
-  removeFromCart: handleAsync(async (req, res) => {
+  removeFromCart: asyncHandler(async (req, res) => {
     const { itemId } = req.params;
     const userId = req.user.id;
 
@@ -94,7 +94,7 @@ const cartController = {
     }
   }),
 
-  clearCart: handleAsync(async (req, res) => {
+  clearCart: asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const result = await Cart.clearCart(userId);
 
@@ -107,7 +107,7 @@ const cartController = {
     });
   }),
 
-  getCartCount: handleAsync(async (req, res) => {
+  getCartCount: asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const count = await Cart.getCartItemCount(userId);
 
