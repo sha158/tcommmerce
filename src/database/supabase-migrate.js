@@ -80,6 +80,25 @@ const runSupabaseMigrations = async () => {
       console.log('✅ Migration completed successfully!');
     }
 
+    // Run the schema update to make last_name optional
+    console.log('🔄 Making last_name column optional...');
+    const makeLastNameOptionalSQL = `ALTER TABLE users ALTER COLUMN last_name DROP NOT NULL;`;
+
+    const { data: alterData, error: alterError } = await supabase.rpc('exec_sql', { sql: makeLastNameOptionalSQL });
+
+    if (alterError) {
+      if (alterError.message.includes('function exec_sql')) {
+        console.log('❌ Cannot alter table automatically. Please run this SQL manually in Supabase dashboard:');
+        console.log('\n' + makeLastNameOptionalSQL + '\n');
+      } else {
+        console.log('❌ Error making last_name optional:', alterError.message);
+        console.log('Please run this SQL manually in Supabase dashboard:');
+        console.log('\n' + makeLastNameOptionalSQL + '\n');
+      }
+    } else {
+      console.log('✅ Successfully made last_name column optional!');
+    }
+
   } catch (error) {
     console.error('❌ Migration failed:', error.message);
     console.log('\n📝 Please manually create the users table in Supabase:');
