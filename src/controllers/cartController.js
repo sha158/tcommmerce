@@ -3,10 +3,11 @@ const { asyncHandler } = require('../utils/errorHandler');
 
 const cartController = {
   addToCart: asyncHandler(async (req, res) => {
-    const { product_id, quantity = 1 } = req.body;
+    const { product_id, productId, quantity = 1 } = req.body;
+    const finalProductId = product_id || productId;
     const userId = req.user.id;
 
-    if (!product_id) {
+    if (!finalProductId) {
       return res.status(400).json({
         success: false,
         message: 'Product ID is required'
@@ -21,7 +22,7 @@ const cartController = {
     }
 
     try {
-      const cartItem = await Cart.addItem(userId, product_id, quantity);
+      const cartItem = await Cart.addItem(userId, finalProductId, quantity);
 
       res.status(201).json({
         success: true,
